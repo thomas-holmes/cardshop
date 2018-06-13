@@ -7,6 +7,8 @@ import (
 )
 
 func main() {
-	game.Run()
+	if err := game.Run(); err != nil {
+		panic(err)
+	}
 	log.Println("Yo")
 }

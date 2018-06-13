@@ -14,7 +14,7 @@ func Run() error {
 
 	runtime.LockOSThread()
 
-	window, err := sdl.CreateWindow("cardshop", 100, 100, 800, 600, sdl.WINDOW_RESIZABLE)
+	window, err := sdl.CreateWindow("cardshop", sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED, 1200, 900, sdl.WINDOW_RESIZABLE)
 	if err != nil {
 		return err
 	}
