@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/thomas-holmes/cardshop/pkg/game"
+	"github.com/thomas-holmes/gimbal/pkg/game"
 )
 
 func main() {
