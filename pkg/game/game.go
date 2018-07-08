@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"runtime"
+	"sort"
 
 	"github.com/veandco/go-sdl2/sdl"
 )
@@ -107,12 +108,15 @@ func drawBoard(renderer *sdl.Renderer) error {
 type card struct {
 	rect  sdl.Rect
 	color sdl.Color
+	touch int64
 }
 
 var cards []card
 
 func drawCards(renderer *sdl.Renderer) error {
-	for _, c := range cards {
+	// Loop through cards in reverse, because we put the highest one at the front of the slice
+	for i := range cards {
+		c := cards[len(cards)-i-1]
 		if err := renderer.SetDrawColorArray(c.color.R, c.color.G, c.color.B, c.color.A); err != nil {
 			return err
 		}
@@ -136,12 +140,21 @@ func checkCards(x, y int32) (*card, bool) {
 
 var grabbedCard *card
 
+var touch int64
+
 func grabCard(c *card) {
 	if grabbedCard != nil {
 		panic(fmt.Sprintln("Already have card", *grabbedCard, "grabbed, can't grab another", *c))
 	}
 	log.Println("Grabbed card", *c)
 	grabbedCard = c
+
+	touch++
+	c.touch = touch
+
+	sortCards()
+
+	grabbedCard = &cards[0]
 }
 
 func releaseCard() {
@@ -160,4 +173,10 @@ func dragCard(dX, dY int32) error {
 	grabbedCard.rect.Y += dY
 
 	return nil
+}
+
+func sortCards() {
+	sort.SliceStable(cards, func(i, j int) bool {
+		return cards[i].touch > cards[j].touch
+	})
 }
